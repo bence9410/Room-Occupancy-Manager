@@ -14,6 +14,26 @@ public class RoomOccupancyManager {
 	}
 
 	public static RoomOccupancyManagerResponse calculate(RoomOccupancyManagerRequest request) {
-		return null;
+		int premiumRooms = request.getNumberOfPremiumRooms();
+		int economyRooms = request.getNumberOfEconomyRooms();
+		double premium = 0;
+		int i = GUESTS.length - 1;
+		while (i > 0 && premiumRooms > 0 && GUESTS[i] >= 100) {
+			premium += GUESTS[i--];
+			premiumRooms--;
+		}
+		while (i >= 0 && economyRooms < i + 1 && premiumRooms > 0) {
+			premium += GUESTS[i--];
+			premiumRooms--;
+		}
+		double economy = 0;
+		while (i >= 0 && economyRooms > 0) {
+			while (GUESTS[i] >= 100) {
+				i--;
+			}
+			economy += GUESTS[i--];
+			economyRooms--;
+		}
+		return new RoomOccupancyManagerResponse(premium, economy);
 	}
 }
